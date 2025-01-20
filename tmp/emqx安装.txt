@@ -1,0 +1,80 @@
+https://www.emqx.com/zh/downloads-and-install/broker?os=Ubuntu
+
+------------
+
+配置 EMQX Apt 源
+curl -s https://assets.emqx.com/scripts/install-emqx-deb.sh | sudo bash
+
+安装 EMQX
+sudo apt-get install emqx
+
+启动 EMQX
+sudo systemctl start emqx
+
+开机自启
+sudo systemctl enable emqx
+
+
+查看是否开机自启
+systemctl is-enabled emqx
+
+查看emqx当前状态
+sudo systemctl status emqx
+
+====================
+linux上完全关闭docker ，且我在ifconfig里面不想看到docker的虚拟网口
+
+
+要在Linux上完全关闭Docker，并且移除Docker的虚拟网络接口（如`docker0`），你可以按照以下步骤操作：
+
+### 1. 停止并禁用Docker服务
+
+首先，停止Docker服务并将其禁用，以防止在系统重启后再次启动：
+
+```bash
+sudo systemctl stop docker
+sudo systemctl disable docker
+```
+
+### 2. 移除Docker的虚拟网络接口
+
+即使Docker服务已停止，有时虚拟网络接口仍然存在。你可以使用以下命令手动删除这些接口：
+
+```bash
+sudo ip link delete docker0
+```
+
+### 3. 检查并验证
+
+使用 `ifconfig` 或 `ip addr` 来验证虚拟网络接口是否已被移除：
+
+```bash
+ifconfig
+```
+
+或
+
+```bash
+ip addr
+```
+
+如果`docker0`等虚拟网络接口已经消失，说明操作成功。
+
+### 4. 可选：完全卸载Docker
+
+如果你不再需要Docker，可以选择完全卸载它：
+
+```bash
+sudo apt-get purge docker-ce docker-ce-cli containerd.io
+sudo rm -rf /var/lib/docker
+```
+
+### 5. 清理网络配置（可选）
+
+如果有其他Docker网络配置文件残留，你可以通过删除相关配置文件来进一步清理：
+
+```bash
+sudo rm /etc/docker/daemon.json
+```
+
+通过以上步骤，你可以完全关闭Docker并移除与其相关的虚拟网络接口。

@@ -1,0 +1,67 @@
+1.[root@rbrain:~/install]# tar zxvf install_barcode.tar.gz
+tar: invalid option -- 'z'
+BusyBox v1.27.2 (2024-04-16 11:57:53 CST) multi-call binary.
+
+
+错误的原因是你使用的 `tar` 命令版本是 BusyBox 的简化版，它的 `tar` 实现并不支持 `-z` 选项。`-z` 选项用于处理 `.gz` 格式的压缩文件，但在这个版本的 `tar` 中不被支持。
+
+解决方法有几种：
+
+1. **使用合适的压缩工具**  
+   你可以首先用 `gunzip` 来解压 `.gz` 文件，再使用 `tar` 进行解包。例如：
+   ```bash
+   gunzip install_barcode.tar.gz
+   tar xvf install_barcode.tar
+   ```
+   这样先将 `.gz` 压缩文件解压，然后再用 `tar` 解包。
+
+2. **使用其他支持 `-z` 的 `tar` 版本**  
+   如果系统中有其他版本的 `tar`，可以尝试用它来解压。你可以查看 `/bin` 或 `/usr/bin` 中是否有其他的 `tar` 版本，例如：
+   ```bash
+   /usr/bin/tar zxvf install_barcode.tar.gz
+   ```
+   或者你可以在其他路径上查找并使用带有 `-z` 选项支持的 `tar` 命令。
+
+3. **安装 GNU tar**  
+   如果你有权限，可以考虑安装完整的 GNU 版本的 `tar`，它支持更多的功能，包括 `-z` 选项。可以使用如下命令安装：
+   ```bash
+   sudo apt-get install tar  # 如果是 Debian/Ubuntu 系统
+   sudo yum install tar      # 如果是 CentOS/RHEL 系统
+   ```
+
+=================================================
+2.
+可以在系统的自启脚本中设置 alias，以确保所有终端都会生效。具体方法如下：
+
+方法 1: 修改 /etc/profile
+对于系统级别的修改，可以将 alias 添加到/etc/profile 文件中，这样所有用户的终端都会加载这些配置。
+
+打开/etc/profile 文件：
+添加 alias 语句：
+
+bash
+复制代码
+alias ll='ls -la'
+保存文件并退出编辑器（Ctrl + O 保存，Ctrl + X 退出）。
+
+---
+alias Rxx_start='/etc/init.d/S99Rxx start'
+alias Rxx_stop='/etc/init.d/S99Rxx stop'
+----
+source /etc/profile
+========================================
+3.创建软连接来简化以下指令
+# 启动服务
+/etc/init.d/S99Rxx start
+# 停止服务
+/etc/init.d/S99Rxx stop
+# 重启服务
+/etc/init.d/S99Rxx restart
+# 查看状态
+/etc/init.d/S99Rxx status
+
+ln -s /etc/init.d/S99Rxx /usr/bin/Rxx
+或者sudo ln -s /etc/init.d/S99Rxx /usr/local/bin/Rxx
+
+============================================
+4.
